@@ -2,19 +2,29 @@ import './App.css'
 import { useMovies } from './hooks/useMovies'
 import { useSearch } from './hooks/useSearch'
 import { Movies } from './components/Movies'
+import { useEffect, useState } from 'react'
 
 function App() {
+  const [sort, setSort] = useState(false)
   const { search, updateSearch, error } = useSearch()
-  const { movies, getMovies } = useMovies({ search })
+  const { movies, getMovies, loading } = useMovies({ search, sort })
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    getMovies()
+    getMovies({ search })
   }
 
   const handleChange = (event) => {
     updateSearch(event.target.value)
   }
+
+  const handleSort = () => {
+    setSort(!sort)
+  }
+
+  useEffect(()=> {
+    console.log('new movies recived')
+  }, [getMovies])
 
   return (
     <>
@@ -26,13 +36,14 @@ function App() {
             border: '1px solid transparent',
             borderColor: error ? 'red' : 'transparent'
           }} onChange={handleChange} value={search} name='query' type="text" placeholder='Avengers, Star Wars, The Matrix...' />
+          <span>Order by name</span><input type="checkbox" onChange={handleSort} checked={sort} />
           <button type='submmit'>Search</button>
         </form>
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </header>
 
       <main>
-        <Movies movies={movies}></Movies>
+        {loading ? <p>Cargando...</p> : <Movies movies={movies}></Movies>}
       </main>
 
 
