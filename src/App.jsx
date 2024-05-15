@@ -2,7 +2,7 @@ import './App.css'
 import { useMovies } from './hooks/useMovies'
 import { useSearch } from './hooks/useSearch'
 import { Movies } from './components/Movies'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 function App() {
   const [sort, setSort] = useState(false)
@@ -15,16 +15,14 @@ function App() {
   }
 
   const handleChange = (event) => {
-    updateSearch(event.target.value)
+    const newSearch = event.target.value
+    updateSearch(newSearch)
+    getMovies({ search: newSearch })
   }
 
   const handleSort = () => {
     setSort(!sort)
   }
-
-  useEffect(()=> {
-    console.log('new movies recived')
-  }, [getMovies])
 
   return (
     <>
